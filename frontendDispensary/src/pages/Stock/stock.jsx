@@ -1,27 +1,44 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { SearchBox } from '../../components/searchBox/searchBox'
 import './stock.css'
+import axios from 'axios'
 import { TableComp } from '../../components/Table/table';
-export const Stock=()=>{
+export const Stock=(props)=>{
   const[medicineName,setMedicineName]=useState("");
+  const[stocks,setStocks]=useState([]);
   const handleInputChange=(value)=>{
        setMedicineName(value);
   }
   const headers=["Sr No.","Name","Quantity","Usage"];
-  const rowData=[
-    {
-      sno:1,
-      name:"rakesh",
-      quna:23,
-      usage:'fever'
   
-    }
-  ]
+  const getFormattedData=(data)=>{
+    let newarr=data.map((item,ind)=>{
+        return {srNo:ind+1,name:item.name,quantity:item.quantity,usage:item.usage}
+    })
+    setStocks(newarr);
+  }
+  const fetchData= async()=>{
+      props.showLoader();
+      await axios.get(`http://localhost:4000/api/medicine/search-by-name?name=${medicineName}`).then((response)=>{
+         if(response.data.medicines.length===0){
+           setStocks([]);
+         }
+         getFormattedData(response.data.medicines);
+      
+      }).catch(err=>{
+        console.log(err);
+      }).finally(()=>{
+        props.hideLoader();
+      })
+  }
+  useEffect(()=>{
+    fetchData();
+  },[medicineName]);
   return(
     <div className='stock-page'>
         <SearchBox placeholder="Search Medicine" value={medicineName} onChange={handleInputChange}/>
       <div className='stock-page-card'>
-        <TableComp header={headers} data={rowData}/>
+        <TableComp header={headers} data={stocks}/>
 
       </div>
     </div>
