@@ -21,8 +21,8 @@ export const Header = (props) => {
   };
   const fetchEvents=async()=>{
     await axios.get('http://localhost:4000/api/notification/get').then((response)=>{
-      
-      setEvents(response.data.notifications);
+       console.log(response);
+      setEvents(response.data.notification||[]);
     }).catch(err=>{
       console.log(err);
     })
@@ -171,7 +171,7 @@ export const Header = (props) => {
               {
                 events?.map((item,index)=>{
                   return(
-                    <div className="popup-notification">{item.title}</div>
+                    <div className="popup-notification">.{item.title}</div>
                   );
                 })
               }

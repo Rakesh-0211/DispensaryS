@@ -48,6 +48,9 @@ export const Login=(props)=>{
       if(response.data.isExist.email==="rb038066@gmail.com"){
           navigate('/admin/dashboard');
       }
+      else if(response.data.isExist.role==="staff"){
+           navigate('/admin/dashboard');
+      }
       else{
       navigate(`/student/${response.data.isExist._id}`);
       }

@@ -3,19 +3,42 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
 import { SearchBox } from "../../../components/searchBox/searchBox";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
-import EditIcon from '@mui/icons-material/Edit';
+import { useEffect, useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
 import { Modal } from "../../../components/Modal/modal";
 import { MedicineModal } from "./MedicineModal/medincineModal";
-export const ManageMedicine = () => {
+import { toast } from "react-toastify";
+import axios from "axios";
+export const ManageMedicine = (props) => {
   const [medicineSearch, setMedicineSearch] = useState("");
-  const[addModal,setAddModal]=useState(false);
-  const onOffModal=()=>{
-  setAddModal(prev=>!prev);
-  }
+  const [addModal, setAddModal] = useState(false);
+  const [data, setData] = useState([]);
+  const onOffModal = () => {
+    setAddModal((prev) => !prev);
+  };
   const onChangeValue = (value) => {
     setMedicineSearch(value);
   };
+  const fetchData = async () => {
+    props.showLoader();
+    await axios
+      .get(
+        `http://localhost:4000/api/medicine/search-by-name?name=${medicineSearch}`
+      )
+      .then((response) => {
+        console.log(response);
+        setData(response.data.medicines);
+      })
+      .catch((err) => {
+        toast.error(err?.response?.data?.error);
+      })
+      .finally(() => {
+        props.hideLoader();
+      });
+  };
+  useEffect(() => {
+    fetchData();
+  }, [medicineSearch]);
   return (
     <div className="manageMedicine">
       <div className="go-back">
@@ -30,7 +53,9 @@ export const ManageMedicine = () => {
           value={medicineSearch}
           onChange={onChangeValue}
         />
-        <div className="add-manage-medicine" onClick={onOffModal}>Add</div>
+        <div className="add-manage-medicine" onClick={onOffModal}>
+          Add
+        </div>
       </div>
       <div className="manageMedicine-card">
         <div className="report-form-rows">
@@ -44,25 +69,37 @@ export const ManageMedicine = () => {
           </div>
 
           <div className="report-form-row-block">
-            <div className="report-form-row">
-              <div className="">2</div>
-              <div className="col-2-mng">Paracetamol</div>
-              <div className="col-2-mng">Danish</div>
-              <div className="col-3-mng">12</div>
-              <div className="edit-icon"><EditIcon/></div>
-              <div className="delete-icon">
-                <DeleteIcon />
+            {data.map((item, index) => {
+              return (
+                <div className="report-form-row">
+                  <div className="">{index + 1}</div>
+                  <div className="col-2-mng">{item.name}</div>
+                  <div className="col-2-mng">{item?.addedBy?.name}</div>
+                  <div className="col-3-mng">{item.quantity}</div>
+                  <div className="edit-icon">
+                    <EditIcon />
+                  </div>
+                  <div className="delete-icon">
+                    <DeleteIcon />
+                  </div>
+                </div>
+              );
+            })}
+            {data.length === 0 && (
+              <div className="report-form-row">
+                <div>No Any Medicine Yet</div>
               </div>
-            </div>
-            <div className="report-form-row">
-              <div>No Any Medicine Yet</div>
-            </div>
+            )}
           </div>
         </div>
       </div>
-      {
-        addModal?<Modal header="Add Medicine" handleClose={onOffModal} children={<MedicineModal/>}/>:null
-      }
+      {addModal ? (
+        <Modal
+          header="Add Medicine"
+          handleClose={onOffModal}
+          children={<MedicineModal />}
+        />
+      ) : null}
     </div>
   );
 };
