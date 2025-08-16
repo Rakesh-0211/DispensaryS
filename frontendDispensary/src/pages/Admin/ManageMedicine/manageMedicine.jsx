@@ -13,7 +13,11 @@ export const ManageMedicine = (props) => {
   const [medicineSearch, setMedicineSearch] = useState("");
   const [addModal, setAddModal] = useState(false);
   const [data, setData] = useState([]);
+  const[clickedMedicine,setClickedMedicine]=useState(null);
   const onOffModal = () => {
+    if(addModal){
+      setClickedMedicine(null);
+    }
     setAddModal((prev) => !prev);
   };
   const onChangeValue = (value) => {
@@ -39,6 +43,24 @@ export const ManageMedicine = (props) => {
   useEffect(() => {
     fetchData();
   }, [medicineSearch]);
+  const handleEdit=(item)=>{
+     setClickedMedicine(item);
+     setAddModal(true);
+  }
+  const filterOutMedicines=(id)=>{
+    let newArr=data.filter((item)=>item._id!==id);
+    setData(newArr);
+  }
+  const handleDelete=async(id)=>{
+    props.showLoader();
+    await axios.delete(`http://localhost:4000/api/medicine/delete/${id}`,{withCredentials:true}).then((response)=>{
+        filterOutMedicines(id);
+    }).catch(err=>{
+      toast.error(err?.response?.data?.error);
+    }).finally(()=>{
+      props.hideLoader();
+    })
+  }
   return (
     <div className="manageMedicine">
       <div className="go-back">
@@ -76,10 +98,10 @@ export const ManageMedicine = (props) => {
                   <div className="col-2-mng">{item.name}</div>
                   <div className="col-2-mng">{item?.addedBy?.name}</div>
                   <div className="col-3-mng">{item.quantity}</div>
-                  <div className="edit-icon">
-                    <EditIcon />
+                  <div onClick={()=>handleEdit(item)}className="edit-icon">
+                    <EditIcon style={{cursor:"pointer"}}/>
                   </div>
-                  <div className="delete-icon">
+                  <div onClick={()=>handleDelete(item._id)} className="delete-icon">
                     <DeleteIcon />
                   </div>
                 </div>
@@ -97,7 +119,7 @@ export const ManageMedicine = (props) => {
         <Modal
           header="Add Medicine"
           handleClose={onOffModal}
-          children={<MedicineModal />}
+          children={<MedicineModal showLoader={props.showLoader} hideLoader={props.hideLoader} clickedMedicine={clickedMedicine}/>}
         />
       ) : null}
     </div>
