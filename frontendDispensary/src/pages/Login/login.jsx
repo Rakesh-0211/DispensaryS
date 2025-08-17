@@ -69,13 +69,22 @@ if(registerField.name.length<3){
   return toast.error("Name should be greater than 2 characters");
 }
 props.showLoader();
-await axios.post('http://localhost:4000/api/auth/register',registerField).then(response=>{
+const dataToSend = {
+    ...registerField,
+    role: "student"
+  };
+await axios.post('http://localhost:4000/api/auth/register',dataToSend).then(response=>{
  toast.success("User Registered Successfully", {
   autoClose: 3000,
- 
+  
   pauseOnHover: false
 });
- 
+  setRegisterField({
+    name: "",
+    email: "",
+    password: "",
+    roll: ""
+  });
 
 
 }).catch(err=>{

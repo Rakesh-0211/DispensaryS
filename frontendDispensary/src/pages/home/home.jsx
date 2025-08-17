@@ -73,7 +73,7 @@ export const Home = (props) => {
       <div className="home-block">
         <div className="home-left-page">
           {
-            userInfo?.role==='admin'&& <Link to={'/admin/dashboard'} className={`home-left-option `} >
+            userInfo?.role!=='student'&& <Link to={'/admin/dashboard'} className={`home-left-option `} >
             <HomeIcon />
             Dashboard
           </Link>

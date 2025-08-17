@@ -19,7 +19,7 @@ const cookieOptions={
 }
 exports.register=async(req,res)=>{
    try{
-       const {name,email,password,roll}=req.body;
+       const {name,email,password,roll,role}=req.body;
        const isExist=await UserModels.findOne({email});
        if(isExist){
         return res.status(400).json({
@@ -32,7 +32,8 @@ exports.register=async(req,res)=>{
         name,
         email,
         roll,
-        password:hashedPassword
+        password:hashedPassword,
+         role: role || "student" 
        });
        await user.save();
        res.status(201).json({

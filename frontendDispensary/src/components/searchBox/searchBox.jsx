@@ -8,11 +8,16 @@ export const SearchBox=(props)=>{
       props.onChange(event.target.value);
      }
   }
+  const handleClick=()=>{
+    if(props.handleClick){
+       props.handleClick();
+    }
+  }
   return(
     <div className='page-searchBox'>
         <input className="input-box"type="text" placeholder={placeholder} value={value}
         onChange={(event)=>handleOnChange(event)}/>
-        <div className='search-btn'><SearchIcon/></div>
+        <div className='search-btn' onClick={handleClick}><SearchIcon/></div>
       </div>
   )
 }
