@@ -248,7 +248,7 @@ exports.registerStudentByStaff=async(req,res)=>{
      await user.save();
      const mailOptions={
       from:process.env.EMAIL,
-      to:email,
+      to:body.email,
       subject:'Password for Dispensary System',
       text:`Hi, Your password for Dispensary system is ${token} whose email id is registered email id 
       ${body.email}`

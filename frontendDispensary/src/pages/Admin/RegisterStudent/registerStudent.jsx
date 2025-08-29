@@ -5,7 +5,9 @@ import { SearchBox } from "../../../components/searchBox/searchBox";
 import { useState } from "react";
 import { Modal } from "../../../components/Modal/modal";
 import { Report } from "./Report/report";
-export const RegisterStudent = () => {
+import { toast } from "react-toastify";
+import axios from "axios";
+export const RegisterStudent = (props) => {
   const [searchStudent, setSearchStudent] = useState("");
   const [studentDetail, setStudentDetail] = useState({
     name: "",
@@ -35,6 +37,84 @@ export const RegisterStudent = () => {
       [key]: event.target.value,
     });
   };
+  const handleSearch = async () => {
+    if (searchStudent.trim().length === 0) {
+      return toast.error("Please enter correct roll number.");
+    }
+    props.showLoader();
+    await axios
+      .get(
+        `http://localhost:4000/api/auth/get-student-by-roll/${searchStudent}`,
+        { withCredentials: true }
+      )
+      .then((response) => {
+        console.log(response);
+        toast.success(response.data.message);
+        setStudentDetail({ ...studentDetail, ...response.data.student });
+      })
+      .catch((err) => {
+        setStudentDetail({
+          _id: "",
+          email: "",
+          name: "",
+          roll: "",
+          mobileNo: "",
+          fatherName: "",
+          fatherMobile: "",
+          address: "",
+          previous_health: "",
+          bloodGroup: "",
+        });
+        toast.error(err?.response?.data?.error);
+      })
+      .finally(() => {
+        props.hideLoader();
+      });
+  };
+  const handleUpdateFunc=async()=>{
+    if(studentDetail.name.trim().length===0||
+       studentDetail.email.trim().length===0||
+       studentDetail.roll.trim().length===0||
+       studentDetail.mobileNo.trim().length===0){
+        return toast.error("Name,Mobile No and Roll can't be empty");
+       }
+    props.showLoader();
+    const{_id,updateAt,...student}={...studentDetail};
+    await axios.put(`http://localhost:4000/api/auth/update-student/${_id}`,student,{withCredentials:true}).then(response=>{
+      console.log(response);
+    }).catch(err=>{
+      toast.error(err?.reponse?.data?.error);
+      console.log(err);
+    }).finally(()=>{
+      props.hideLoader();
+    })
+  }
+  const registerStudent=async()=>{
+    if(studentDetail.name.trim().length===0||studentDetail.email.trim().length===0||studentDetail.roll.trim().length===0||studentDetail.mobileNo.trim().length===0){
+      return toast.error("Name,Mobile No and Roll can't be empty");
+    }
+    props.showLoader();
+    await axios.post('http://localhost:4000/api/auth/registerStudentByStaff  ',studentDetail,{withCredentials:true}).then((response)=>{
+      toast.success(response.data.message);
+    }).catch(err=>{
+       setStudentDetail({
+        _id:"",
+        email:"",
+        name:"",
+        roll:"",
+        mobileNo:"",
+        fatherName:"",
+        fatherMobile:"",
+        address:"",
+        previous_health:"",
+        bloodGroup:"",
+        age:""
+       })
+       toast.error(err?.response?.data?.error);
+    }).finally(()=>{
+      props.hideLoader();
+    })
+  }
   return (
     <div className="register-student">
       <div className="go-back">
@@ -44,6 +124,7 @@ export const RegisterStudent = () => {
         </Link>
       </div>
       <SearchBox
+        handleClick={handleSearch}
         placeholder={"Search By Roll No."}
         value={searchStudent}
         onChange={handleOnChange}
@@ -62,7 +143,7 @@ export const RegisterStudent = () => {
               />
             </div>
             <div className="register-input-box">
-              <input
+              <input disabled={studentDetail?._id}
                 value={studentDetail.email}
                 onChange={(event) => handleOnChangeInputField(event, "email")}
                 className="input-box-register"
@@ -153,21 +234,24 @@ export const RegisterStudent = () => {
               />
             </div>
           </div>
-          <button type="submit" className="form-btn reg-btn">
-            Register
-          </button>
-          <div className="block-divs">
-            <button type="submit" className="form-btn reg-btn">
-              Update
+          {studentDetail?._id ? (
+            <div className="whole">
+              <button type="submit" className="form-btn reg-btn" onClick={handleUpdateFunc}>
+                Update
+              </button>
+              <button
+                type="submit"
+                className="form-btn reg-btn"
+                onClick={openCloseModal}
+              >
+                Report
+              </button>
+            </div>
+          ) : (
+            <button type="submit" className="form-btn reg-btn" onClick={registerStudent}>
+              Register
             </button>
-            <button
-              type="submit"
-              className="form-btn reg-btn"
-              onClick={openCloseModal}
-            >
-              Report
-            </button>
-          </div>
+          )}
         </form>
       </div>
       {reportModal ? (
