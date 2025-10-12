@@ -1,14 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend for dispensary system",
+  "description": "backend for dispensary System",
   "license": "ISC",
   "author": "",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -18,9 +18,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
-    "nodemailer": "^7.0.5"
-  },
-  "devDependencies": {
+    "nodemailer": "^7.0.5",
     "nodemon": "^3.1.10"
   }
 }
