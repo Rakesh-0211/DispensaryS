@@ -1,32 +1,42 @@
 const express = require("express");
 const app = express();
-const cookieparser=require('cookie-parser');
-const cors=require("cors");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
-require('dotenv').config({path:"./.env"})
-app.use(cookieparser());
+// Middleware
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors({
-   credentials:true,
-   origin:"http://localhost:5173"
-}));
-// import DB connection
-require('./connect');
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  })
+);
 
-const userRoutes=require('./Routes/user');
-const facilityRoutes=require('./Routes/facility');
-const medicineRoutes=require('./Routes/medicine');
-const hospitalRoutes=require('./Routes/nearByHospital');
-const notificationRoutes=require('./Routes/notification');
-const gallaryRoutes=require('./Routes/gallary');
-const historyRoutes=require('./Routes/history');
-app.use("/api/auth",userRoutes);
-app.use("/api/facility",facilityRoutes);
-app.use("/api/medicine",medicineRoutes);
-app.use("/api/nearByHospital",hospitalRoutes);
-app.use("/api/notification",notificationRoutes);
-app.use("/api/gallary",gallaryRoutes);
-app.use("/api/history",historyRoutes);
-app.listen(process.env.PORT, () => {
-  console.log("✅ Server running on port",process.env.PORT);
+// Connect DB
+require("./connect");
+
+// Routes
+app.use("/api/auth", require("./Routes/user"));
+app.use("/api/facility", require("./Routes/facility"));
+app.use("/api/medicine", require("./Routes/medicine"));
+app.use("/api/nearByHospital", require("./Routes/nearByHospital"));
+app.use("/api/notification", require("./Routes/notification"));
+app.use("/api/gallary", require("./Routes/gallary"));
+app.use("/api/history", require("./Routes/history"));
+
+// Default route
+app.get("/", (req, res) => {
+  res.send("🚀 Backend is running successfully!");
 });
+
+// Export the Express app for Vercel
+module.exports = app;
+
+// Local development
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+}
