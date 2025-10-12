@@ -1,4 +1,4 @@
-import './SearchBox.css'
+import './searchBox.css'
 import SearchIcon from '@mui/icons-material/Search';
 export const SearchBox=(props)=>{
   const placeholder=props.placeholder?props.placeholder:"";
