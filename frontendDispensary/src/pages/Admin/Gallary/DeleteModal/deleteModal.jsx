@@ -1,12 +1,13 @@
 import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const DeleteModal = (props) => {
 
   const handleDelete = async () => {
     if (props.clickedItem) {
-      await axios.delete(`http://localhost:4000/api/gallary/delete/${props.clickedItem._id}`, { withCredentials: true })
+      await axios.delete(`${backendUrl}/api/gallary/delete/${props.clickedItem._id}`, { withCredentials: true })
         .then(() => {
           window.location.reload();
         })

@@ -8,6 +8,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Modal } from "../../../components/Modal/modal";
 import { MedicineModal } from "./MedicineModal/medincineModal";
 import { toast } from "react-toastify";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import axios from "axios";
 export const ManageMedicine = (props) => {
   const [medicineSearch, setMedicineSearch] = useState("");
@@ -27,7 +28,7 @@ export const ManageMedicine = (props) => {
     props.showLoader();
     await axios
       .get(
-        `http://localhost:4000/api/medicine/search-by-name?name=${medicineSearch}`
+        `${backendUrl}/api/medicine/search-by-name?name=${medicineSearch}`
       )
       .then((response) => {
         console.log(response);
@@ -53,7 +54,7 @@ export const ManageMedicine = (props) => {
   }
   const handleDelete=async(id)=>{
     props.showLoader();
-    await axios.delete(`http://localhost:4000/api/medicine/delete/${id}`,{withCredentials:true}).then((response)=>{
+    await axios.delete(`${backendUrl}/api/medicine/delete/${id}`,{withCredentials:true}).then((response)=>{
         filterOutMedicines(id);
     }).catch(err=>{
       toast.error(err?.response?.data?.error);

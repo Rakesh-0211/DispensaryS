@@ -3,6 +3,7 @@ import "./forgotModal.css";
 import { useState} from "react";
 import{ToastContainer,toast} from 'react-toastify'
 import axios from "axios";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const ForgotModal = (props) => {
   
   const [step, setStep] = useState(1);
@@ -12,7 +13,7 @@ export const ForgotModal = (props) => {
       return toast.error("Please Enter OTP");
     }
     props.showLoader();
-    await axios.post('http://localhost:4000/api/auth/verify-otp',{email:inputField.email,otp:inputField.otp}).then((response)=>{
+    await axios.post(`${backendUrl}/api/auth/verify-otp`,{email:inputField.email,otp:inputField.otp}).then((response)=>{
         setStep(3);
         setButtonText("Update New Password")
         alert(response?.data?.message);
@@ -39,7 +40,7 @@ export const ForgotModal = (props) => {
       return toast.error("Please Enter Email");
     }
       props.showLoader();
-      await axios.post('http://localhost:4000/api/auth/send-otp',{email:inputField.email}).then((response)=>{
+      await axios.post(`${backendUrl}/api/auth/send-otp`,{email:inputField.email}).then((response)=>{
         console.log(response);
         setStep(2);
         setButtonText("Enter the OTP");
@@ -67,7 +68,7 @@ const resetPassword=async()=>{
     return toast.error("Please Enter the new password");
   console.log("Step:", step);
   props.showLoader(); // 👈 yeh tumne lagaya nahi tha
-  await axios.post('http://localhost:4000/api/auth/reset-password',{
+  await axios.post(`${backendUrl}/api/auth/reset-password`,{
     email: inputField.email,
     newPassword: inputField.newPassword
   }).then((response)=>{

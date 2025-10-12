@@ -3,13 +3,14 @@ import "./manageEvent.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { toast } from "react-toastify";
+const backendUrl=import.meta.env.VITE_BACKEND_URL;
 export const ManageEvent = (props) => {
   const [title, setTitle] = useState("");
   const [data, setData] = useState([]);
   const fetchData = async () => {
     props.showLoader();
     await axios
-      .get("http://localhost:4000/api/notification/get")
+      .get(`${backendUrl}/api/notification/get`)
       .then((response) => {
         console.log(response);
         setData(response.data.notification);
@@ -31,7 +32,7 @@ export const ManageEvent = (props) => {
       return toast.error("Please Enter Title");
      }
      props.showLoader();
-     await axios.post('http://localhost:4000/api/notification/add',{title},{withCredentials:true}).then((response)=>{
+     await axios.post(`${backendUrl}/api/notification/add`,{title},{withCredentials:true}).then((response)=>{
         setData([response.data.notification, ...data]);
         setTitle("");
      }).catch(err=>{
@@ -46,7 +47,7 @@ export const ManageEvent = (props) => {
   }
   const handleDeleteEvent=async(id)=>{
      props.showLoader();
-     await axios.delete(`http://localhost:4000/api/notification/delete/${id}`,{withCredentials:true}).then((response)=>{
+     await axios.delete(`${backendUrl}/api/notification/delete/${id}`,{withCredentials:true}).then((response)=>{
        filterOutEvent(id);
      }).catch(err=>{
       toast.error(err?.response?.data?.error);

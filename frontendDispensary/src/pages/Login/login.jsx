@@ -5,6 +5,7 @@ import axios from 'axios'
 import { useState } from 'react'
 import {  useNavigate } from 'react-router-dom'
 import { ForgotModal } from '../../components/ForgotModal/forgotModal'
+const backend_url=import.meta.env.VITE_BACKEND_URL;
 export const Login=(props)=>{
   const navigate=useNavigate();
 
@@ -39,7 +40,7 @@ export const Login=(props)=>{
       return toast.error("Please enter the Credentials")
     }
     props.showLoader();
-    await axios.post('http://localhost:4000/api/auth/login',loginField,{withCredentials:true}).then((response)=>{
+    await axios.post(`${backend_url}/api/auth/login`,loginField,{withCredentials:true}).then((response)=>{
       console.log(response);
       localStorage.setItem('token',response.data.token);
       localStorage.setItem('userInfo',JSON.stringify(response.data.isExist));
@@ -73,7 +74,7 @@ const dataToSend = {
     ...registerField,
     role: "student"
   };
-await axios.post('http://localhost:4000/api/auth/register',dataToSend).then(response=>{
+await axios.post(`${backend_url}/api/auth/register`,dataToSend).then(response=>{
  toast.success("User Registered Successfully", {
   autoClose: 3000,
   

@@ -8,6 +8,8 @@ import axios from "axios";
 import { Modal } from "../../../components/Modal/modal";
 import { FacilityModal } from "./facilityModal/facilityModal";
 import { toast } from "react-toastify";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const Facility = (props) => {
   const [modal, setModal] = useState(false);
   const[clickedItems,setClickedItems]=useState(null);
@@ -21,7 +23,7 @@ export const Facility = (props) => {
   const fetchData = async () => {
     props.showLoader();
     await axios
-      .get("http://localhost:4000/api/facility/get")
+      .get(`${backendUrl}/api/facility/get`)
       .then((response) => {
         setData(response.data.data);
         console.log(response.data.data);
@@ -46,7 +48,7 @@ export const Facility = (props) => {
   }
   const handleDelete=async(id)=>{
      props.showLoader();
-     await axios.delete(`http://localhost:4000/api/facility/delete/${id}`,{withCredentials:true}).then((response)=>{
+     await axios.delete(`${backendUrl}/api/facility/delete/${id}`,{withCredentials:true}).then((response)=>{
       filterOutData(id);
      }).catch(err=>{
       toast.error(err?.response?.data?.error);

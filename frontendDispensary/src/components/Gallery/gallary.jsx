@@ -1,13 +1,14 @@
 import "./gallary.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const Gallary = (props) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       props.showLoader();
       await axios
-        .get("http://localhost:4000/api/gallary/get")
+        .get(`${backendUrl}/api/gallary/get`)
         .then((response) => {
           setData(response.data.images);
         })

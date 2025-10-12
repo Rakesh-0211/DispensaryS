@@ -2,6 +2,7 @@ import { useState,useEffect } from 'react'
 import { SearchBox } from '../../components/searchBox/searchBox'
 import './stock.css'
 import axios from 'axios'
+const backend_url=import.meta.env.VITE_BACKEND_URL;
 import { TableComp } from '../../components/Table/table';
 export const Stock=(props)=>{
   const[medicineName,setMedicineName]=useState("");
@@ -19,7 +20,7 @@ export const Stock=(props)=>{
   }
   const fetchData= async()=>{
       props.showLoader();
-      await axios.get(`http://localhost:4000/api/medicine/search-by-name?name=${medicineName}`).then((response)=>{
+      await axios.get(`${backend_url}/api/medicine/search-by-name?name=${medicineName}`).then((response)=>{
          if(response.data.medicines.length===0){
            setStocks([]);
          }

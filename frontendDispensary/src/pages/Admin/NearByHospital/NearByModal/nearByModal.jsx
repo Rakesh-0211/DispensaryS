@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./nearByModal.css";
 import { toast } from "react-toastify";
 import axios from "axios";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const NearByModal = (props) => {
   const [inputField, setInputField] = useState({
     name: "",
@@ -27,7 +28,7 @@ export const NearByModal = (props) => {
   const updateFunction = async () => {
     await axios
       .put(
-        `http://localhost:4000/api/nearByHospital/update/${props.clickedItem._id}`,
+        `${backendUrl}/api/nearByHospital/update/${props.clickedItem._id}`,
         inputField,
         { withCredentials: true }
       )
@@ -53,7 +54,7 @@ export const NearByModal = (props) => {
     }
 
     await axios
-      .post("http://localhost:4000/api/nearByHospital/add", inputField, {
+      .post(`${backendUrl}/api/nearByHospital/add`, inputField, {
         withCredentials: true,
       })
       .then((response) => {

@@ -1,15 +1,26 @@
 const express = require("express");
 const app = express();
-const cookieparser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config({ path: "./.env" });
 
-app.use(cookieparser());
+app.use(cookieParser());
 app.use(express.json());
+
+// Corrected CORS
+const allowedOrigins = ["http://localhost:5173"]; // Add your frontend URLs here
 app.use(
   cors({
-    credentials: true,
-    origin: "*", // allow all origins for now (can replace with frontend URL)
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true, // allow cookies
   })
 );
 
@@ -33,7 +44,7 @@ app.use("/api/notification", notificationRoutes);
 app.use("/api/gallary", gallaryRoutes);
 app.use("/api/history", historyRoutes);
 
-// 👇 Add this root route (for Vercel health check)
+// Root route (for Vercel health check)
 app.get("/", (req, res) => {
   res.send("🚀 Backend is running successfully!");
 });

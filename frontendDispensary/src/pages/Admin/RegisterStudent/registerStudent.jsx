@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Modal } from "../../../components/Modal/modal";
 import { Report } from "./Report/report";
 import { toast } from "react-toastify";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import axios from "axios";
 export const RegisterStudent = (props) => {
   const [searchStudent, setSearchStudent] = useState("");
@@ -44,7 +45,7 @@ export const RegisterStudent = (props) => {
     props.showLoader();
     await axios
       .get(
-        `http://localhost:4000/api/auth/get-student-by-roll/${searchStudent}`,
+        `${backendUrl}/api/auth/get-student-by-roll/${searchStudent}`,
         { withCredentials: true }
       )
       .then((response) => {
@@ -80,7 +81,7 @@ export const RegisterStudent = (props) => {
        }
     props.showLoader();
     const{_id,updateAt,...student}={...studentDetail};
-    await axios.put(`http://localhost:4000/api/auth/update-student/${_id}`,student,{withCredentials:true}).then(response=>{
+    await axios.put(`${backendUrl}/api/auth/update-student/${_id}`,student,{withCredentials:true}).then(response=>{
       console.log(response);
     }).catch(err=>{
       toast.error(err?.reponse?.data?.error);
@@ -94,7 +95,7 @@ export const RegisterStudent = (props) => {
       return toast.error("Name,Mobile No and Roll can't be empty");
     }
     props.showLoader();
-    await axios.post('http://localhost:4000/api/auth/registerStudentByStaff',studentDetail,{withCredentials:true}).then((response)=>{
+    await axios.post(`${backendUrl}/api/auth/registerStudentByStaff`,studentDetail,{withCredentials:true}).then((response)=>{
       toast.success(response.data.message);
     }).catch(err=>{
        setStudentDetail({

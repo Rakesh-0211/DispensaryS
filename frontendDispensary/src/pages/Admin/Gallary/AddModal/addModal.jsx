@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./addModal.css";
 import axios from "axios";
 import { Box, CircularProgress } from "@mui/material";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const AddModal = (props) => {
   const [image, setImage] = useState(null);
@@ -29,7 +30,7 @@ const AddModal = (props) => {
     }
   };
   const handleSubmit=async()=>{
-    await axios.post('http://localhost:4000/api/gallary/add',{link:image},{withCredentials:true}).then((response)=>{
+    await axios.post(`${backendUrl}/api/gallary/add`,{link:image},{withCredentials:true}).then((response)=>{
       window.location.reload();
     }).catch(err=>{
       console.log(err);

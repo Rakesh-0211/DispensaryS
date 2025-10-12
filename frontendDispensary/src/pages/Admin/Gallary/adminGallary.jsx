@@ -5,6 +5,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddModal from "./AddModal/addModal";
 import DeleteModal from "./DeleteModal/deleteModal";
 import axios from "axios";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import { toast, ToastContainer } from "react-toastify";
 
 export const AdminGallary = (props) => {
@@ -29,7 +30,7 @@ export const AdminGallary = (props) => {
   const fetchData = async () => {
     props.showLoader();
     await axios
-      .get("http://localhost:4000/api/gallary/get")
+      .get(`${backendUrl}/api/gallary/get`)
       .then((response) => {
         console.log(response);
         setData(response.data.images);

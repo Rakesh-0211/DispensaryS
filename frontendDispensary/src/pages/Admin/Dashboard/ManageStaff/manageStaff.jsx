@@ -3,6 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import axios from "axios";
+const backend_url=import.meta.env.VITE_BACKEND_URL;
 import { ToastContainer,toast } from "react-toastify";
 export const ManageStaff = (props) => {
   const [inputField, setinputField] = useState({
@@ -24,7 +25,7 @@ export const ManageStaff = (props) => {
   const fetchData = async () => {
     props.showLoader();
     await axios
-      .get("http://localhost:4000/api/auth/get-staff")
+      .get(`${backend_url}/api/auth/get-staff`)
       .then((response) => {
         setStaffs(response.data.staffs);
       })
@@ -40,7 +41,7 @@ export const ManageStaff = (props) => {
   }, []);
   const handleUpdate=async()=>{
   
-    await axios.put(`http://localhost:4000/api/auth/update-staff/${clickedStaff?._id}`,inputField,{withCredentials:true}).then((response)=>{
+    await axios.put(`${backend_url}/api/auth/update-staff/${clickedStaff?._id}`,inputField,{withCredentials:true}).then((response)=>{
       window.location.reload();
     }).catch(err=>{
       toast.error(err?.response?.data?.error);
@@ -60,7 +61,7 @@ export const ManageStaff = (props) => {
         return toast.error("Please fill all the details");
        }
     props.showLoader();
-    await axios.post('http://localhost:4000/api/auth/add-staff',inputField,{withCredentials:true}).then((response)=>{
+    await axios.post(`${backend_url}/api/auth/add-staff`,inputField,{withCredentials:true}).then((response)=>{
         console.log(response);
         toast.success(response.data.message);
         setStaffs([inputField,...staffs]);
@@ -87,7 +88,7 @@ export const ManageStaff = (props) => {
     setStaffs(newArr);
   }
   const handleOnDeleteBtn=async(id)=>{
-     await axios.delete(`http://localhost:4000/api/auth/delete-staff/${id}`,{withCredentials:true}).then((response)=>
+     await axios.delete(`${backend_url}/api/auth/delete-staff/${id}`,{withCredentials:true}).then((response)=>
       {
         filterOutData(id);
         

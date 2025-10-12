@@ -6,6 +6,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const Header = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export const Header = (props) => {
     }
   };
   const fetchEvents=async()=>{
-    await axios.get('http://localhost:4000/api/notification/get').then((response)=>{
+    await axios.get(`${backendUrl}/api/notification/get`).then((response)=>{
        console.log(response);
       setEvents(response.data.notification||[]);
     }).catch(err=>{
@@ -47,7 +48,7 @@ export const Header = (props) => {
     props.showLoader();
     await axios
       .post(
-        "http://localhost:4000/api/auth/logout",
+        `${backendUrl}/api/auth/logout`,
         {},
         { withCredentials: true }
       )

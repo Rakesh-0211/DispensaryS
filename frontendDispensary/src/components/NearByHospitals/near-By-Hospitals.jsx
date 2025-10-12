@@ -2,6 +2,7 @@ import { TableComp } from '../Table/table'
 import { useState,useEffect } from 'react';
 import axios from 'axios';
 import './near-By-Hospitals.css'
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const NearByHospitals=(props)=>{
   const hospitalheaders=['Sn No.','Name','Address','Contact'];
     const [rowData,setRowData]=useState([]);
@@ -19,7 +20,7 @@ export const NearByHospitals=(props)=>{
     useEffect(()=>{
          props.showLoader();
          const fetchData= async()=>{
-          await axios.get('http://localhost:4000/api/nearByHospital/get').then((response)=>{
+          await axios.get(`${backendUrl}/api/nearByHospital/get`).then((response)=>{
              getFormattedData(response.data.hospitals);
           }).catch(err=>{
             console.log(err);

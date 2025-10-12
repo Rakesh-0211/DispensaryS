@@ -9,6 +9,7 @@ import { Modal } from "../../../components/Modal/modal";
 import { useEffect, useState } from "react";
 import { RecordModal } from "./RecordModal/recordModal";
 import axios from "axios";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import { ToastContainer, toast } from "react-toastify";
 export const Record = (props) => {
   const [studentRoll, setStudentRoll] = useState("");
@@ -25,7 +26,7 @@ export const Record = (props) => {
     props.showLoader();
     await axios
       .get(
-        `http://localhost:4000/api/history/get-history?month=${selectedMonth}&year=${selectedYear}`,
+        `${backendUrl}/api/history/get-history?month=${selectedMonth}&year=${selectedYear}`,
         { withCredentials: true }
       )
       .then((response) => {

@@ -364,6 +364,7 @@ exports.deleteStaff=async(req,res)=>{
   }
 }
 exports.logout=async(req,res)=>{
+    console.log("Yes in the backend running");
     res.clearCookie('token',cookieOptions).json({
       message:'Logged Out successfully'
     });

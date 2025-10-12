@@ -4,6 +4,7 @@ import "./report.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
 import axios from "axios";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import { useEffect } from "react";
 export const Report = (props) => {
   const [searchMedicineName, setSearchMedicineName] = useState("");
@@ -16,7 +17,7 @@ export const Report = (props) => {
   const fetchData = async () => {
     await axios
       .get(
-        `http://localhost:4000/api/medicine/search-by-name?name=${searchMedicineName}`
+        `${backendUrl}/api/medicine/search-by-name?name=${searchMedicineName}`
       )
       .then((response) => {
         console.log(response);
@@ -77,7 +78,7 @@ export const Report = (props) => {
      if(checkInputInValid()){
       return toast.error("Please enter all the fields")
      }
-     await axios.post('http://localhost:4000/api/history/add',{roll:props.studentDetail.roll,student:props.studentDetail._id,medicines:selectMedicine},
+     await axios.post(`${backendUrl}/api/history/add`,{roll:props.studentDetail.roll,student:props.studentDetail._id,medicines:selectMedicine},
       {withCredentials:true}
      ).then(response=>{
          toast.success(response.data.message);
