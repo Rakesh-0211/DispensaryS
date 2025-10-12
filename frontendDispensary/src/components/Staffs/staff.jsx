@@ -12,7 +12,7 @@ export const Staff=(props)=>{
         name:item.name,
         designation:item.designation,
         email:item.email,
-        contactNo:item.mobileNo
+        contactNo:item.mobileNo 
       }
       
     })

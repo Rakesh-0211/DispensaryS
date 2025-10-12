@@ -5,7 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useEffect } from "react";
-export const Report = () => {
+export const Report = (props) => {
   const [searchMedicineName, setSearchMedicineName] = useState("");
   const [data, setData] = useState([]);
   const [dropDown, setDropDown] = useState(false);
@@ -45,6 +45,49 @@ export const Report = () => {
       setDropDown(false);
     }
   };
+  const onChangeHandle=(event,ind)=>{
+    const arr=selectMedicine.map((item,index)=>{
+      if(index===ind){
+        if(parseInt(item.quantity)<parseInt(event.target.value)){
+           toast.error("You have not that much medicine in the store")
+        }
+        return {...item,requiredQuantity:event.target.value}
+      }
+      return{...item}
+    })
+    setSelectMedicine(arr);
+  }
+  const handleDelete=(item)=>{
+    let arr=selectMedicine.filter((it)=>item!==it._id);
+    setSelectMedicine(arr);
+  }
+  const checkInputInValid=()=>{
+    let invalid=false;
+    selectMedicine.map((item)=>{
+      if(item.requiredQuantity.trim().length===0){
+        invalid=true;
+      }
+    })
+    return invalid;
+  }
+  const handleOnSubmit=async()=>{
+     if(selectMedicine.length===0){
+      return toast.error("Please select any medicine");
+     }
+     if(checkInputInValid()){
+      return toast.error("Please enter all the fields")
+     }
+     await axios.post('http://localhost:4000/api/history/add',{roll:props.studentDetail.roll,student:props.studentDetail._id,medicines:selectMedicine},
+      {withCredentials:true}
+     ).then(response=>{
+         toast.success(response.data.message);
+         setTimeout(()=>{
+          props.handleCloseModal()
+         },1000)
+     }).catch(err=>{
+      toast.error(err?.response?.data?.error);
+     })
+  }
   return (
     <div className="report-register">
       <div className="medicine-suggestion-block">
@@ -80,12 +123,16 @@ export const Report = () => {
           {selectMedicine.map((item, index) => {
             return (
               <div className="report-form-row">
-                <div className="col-1-rm">Name</div>
-                <div className="col-2-rm">10</div>
+                <div className="col-1-rm">{item.name}</div>
+                <div className="col-2-rm">{item.quantity}</div>
                 <div className="col-3-rm">
-                  <input type="number" className="input-table" />
+                  <input type="number" 
+                  value={selectMedicine[index].     requiredQuantity}
+                  onChange={(event)=>onChangeHandle(event,index)}
+                  className="input-table" />
                 </div>
-                <div className="delete-icon col-4-rm">
+                <div className="delete-icon col-4-rm"
+                  onClick={()=>handleDelete(item._id)}>
                   <DeleteIcon />
                 </div>
               </div>
@@ -93,7 +140,7 @@ export const Report = () => {
           })}
         </div>
       </div>
-      <div className="modal-submit">Submit</div>
+      <div className="modal-submit" onClick={handleOnSubmit}>Submit</div>
     </div>
   );
 };

@@ -94,7 +94,7 @@ export const RegisterStudent = (props) => {
       return toast.error("Name,Mobile No and Roll can't be empty");
     }
     props.showLoader();
-    await axios.post('http://localhost:4000/api/auth/registerStudentByStaff  ',studentDetail,{withCredentials:true}).then((response)=>{
+    await axios.post('http://localhost:4000/api/auth/registerStudentByStaff',studentDetail,{withCredentials:true}).then((response)=>{
       toast.success(response.data.message);
     }).catch(err=>{
        setStudentDetail({
@@ -258,7 +258,8 @@ export const RegisterStudent = (props) => {
         <Modal
           header="Report"
           handleClose={openCloseModal}
-          children={<Report />}
+          children={<Report studentDetail={studentDetail}
+          handleCloseModal={openCloseModal}/>}
         />
       ) : null}
     </div>

@@ -6,13 +6,13 @@ exports.addHistory=async(req,res)=>{
    try{
        let {roll,student,medicines}=req.body;
        let medicineData=medicines.map((item)=>{
-        let{_id,name,requireQuantity}=item;
-        return {_id,name,requireQuantity};
+        let{_id,name,requiredQuantity}=item;
+        return {_id,name,requiredQuantity};
        })
        medicineData.map(async(item)=>{
            let medicineData=await MedicineModel.findById(item._id);
-           let leftQuantity=parseInt(medicineData.quantity)-parseInt(item.requireQuantity);
-           medicineData.quantity=leftQuantity.toString();
+           let leftQuantity=parseInt(medicineData.quantity)-parseInt(item.requiredQuantity);
+           medicineData.quantity=leftQuantity;
            await medicineData.save();
        })
        const addData=new HistoryModel({roll,student,medicines});
@@ -36,7 +36,7 @@ exports.getHistoryByData=async(req,res)=>{
      const startDate=new Date(year,monthIndex,1);
      const endDate=new Date(year,monthIndex+1,1);
      const history=await HistoryModel.find({
-      createdAt:{$gte:startDate,$it:endDate}
+      createdAt:{$gte:startDate,$lt:endDate}
      }).populate("student").sort({createdAt:-1});
      return res.status(200).json({
       message:"Fetched Successfully",
