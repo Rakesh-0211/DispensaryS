@@ -8,7 +8,10 @@ app.use(cookieParser());
 app.use(express.json());
 
 // Corrected CORS
-const allowedOrigins = ["http://localhost:5173"]; // Add your frontend URLs here
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://dispensary-frontend27.vercel.app"
+];
 app.use(
   cors({
     origin: function (origin, callback) {
