@@ -1,6 +1,6 @@
 import { Header } from "./components/header/header";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes,Navigate} from "react-router-dom";
 import { Home } from "./pages/home/home";
 import { Login } from "./pages/Login/login";
 import { Footer } from "./components/footer/footer";
@@ -25,6 +25,8 @@ function App() {
     setLoader(false);
   };
   const [isLogin, setLogin] = useState(localStorage.getItem("isLogin"));
+  let role=localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo")).role:null;
+  let id=localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo"))._id:null;
   const handleLogin = (value) => {
     setLogin(value);
   };
@@ -44,6 +46,7 @@ function App() {
         <Route
           path="/login"
           element={
+            isLogin?role==="student"?<Navigate to={`/student/${id}`}/>:<Navigate to={'/admin/dashboard'}/>:
             <Login
               handleLogin={handleLogin}
               showLoader={showLoader}
@@ -96,6 +99,7 @@ function App() {
             <AdminGallary showLoader={showLoader} hideLoader={hideLoader} />
           }
         />
+        <Route path='/student/:id' element={<studentDashboard showLoader={showLoader} hideLoader={hideLoader}/>}/>
       </Routes>
       <Footer />
       {loader && <GlobalLoader />}

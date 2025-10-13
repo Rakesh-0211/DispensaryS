@@ -21,6 +21,7 @@ export const Record = (props) => {
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
   const[data,setData]=useState([]);
+  const[selectedHistory,setSelectedHistory]=useState(null);
   const currentYear = new Date().getFullYear();
   const fetchData = async () => {
     props.showLoader();
@@ -76,6 +77,28 @@ export const Record = (props) => {
   const onOffModal = () => {
     setModal((prev) => !prev);
   };
+   const handleOnOpenModal = (item) => {
+    setModal((prev) => !prev);
+    setSelectedHistory(item?item:null);
+  };
+  const handleClick=async()=>{
+    if(studentRoll.trim().length==0){
+        return toast.error("Please Enter Correct Roll No.")
+        
+    }
+    
+    props.showLoader();
+    await axios.get(`${backendUrl}/api/history/get?roll=${studentRoll}`,{withCredentials:true}).then((response)=>{
+      console.log(response)
+      
+    }).catch(err=>{
+      console.log(err)
+      toast.error(err?.response?.data?.error)
+    }).finally(()=>{
+      props.hideLoader()
+    })
+    
+  }
   return (
     <div className="records">
       <div className="go-back">
@@ -85,6 +108,7 @@ export const Record = (props) => {
         </Link>
       </div>
       <SearchBox
+        handleClick={handleClick}
         value={studentRoll}
         onChange={onChangeField}
         placeholder="Search By Roll No."
@@ -134,7 +158,7 @@ export const Record = (props) => {
             {data.map((item,index) => {
               return (
                 <div className="report-form-row">
-                  <div className="" onClick={onOffModal}>
+                  <div className="" onClick={()=>{handleOnOpenModal(item)}}>
                     <RemoveRedEyeIcon sx={{ cursor: "pointer" }} />
                   </div>
                   <div className="col-2-mng">{item?.student?.name}</div>
@@ -155,7 +179,7 @@ export const Record = (props) => {
         <Modal
           header="Records"
           handleClose={onOffModal}
-          children={<RecordModal />}
+          children={<RecordModal selectedHistory={selectedHistory}/>}
         />
       ) : null}
     </div>
