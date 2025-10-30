@@ -202,7 +202,7 @@ export const Header = (props) => {
       {location.pathname === "/" ? (
         <div className="header-banner">
           <img
-            src="https://nitrkl.ac.in/eptp/images/fraction-slider/101.jpg"
+            src="/about-banner.jpg"
             alt=""
           />
         </div>

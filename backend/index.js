@@ -10,8 +10,12 @@ app.use(express.json());
 // Corrected CORS
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://dispensary-frontend27.vercel.app"
+  "http://127.0.0.1:5173",
+  "http://localhost:5174", // 👈 Added your current dev port
+  "http://127.0.0.1:5174", // 👈 Add this too for safety
+  "https://dispensary-frontend27.vercel.app",
 ];
+
 app.use(
   cors({
     origin: function (origin, callback) {

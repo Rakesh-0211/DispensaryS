@@ -4,7 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import ImageIcon from "@mui/icons-material/Image";
-import { AboutUs } from "../../components/About-Us/about-Us";
+import { AboutUs } from "../../components/ForgotModal/about-Us";
 import { useState } from "react";
 import { Staff } from "../../components/Staffs/staff";
 import { Facilities } from "../../components/Facilities/facilities";

@@ -1,4 +1,5 @@
-import './about-Us.css'
+import "../About-Us/about-Us.css";
+
 export const AboutUs=()=>{
   return(
     <div className='about-us'>
