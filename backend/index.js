@@ -4,10 +4,11 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config({ path: "./.env" });
 
-app.use(cookieParser());
+// ✅ Middleware
 app.use(express.json());
+app.use(cookieParser());
 
-// ✅ Fixed CORS configuration (for both local and vercel frontend)
+// ✅ CORS configuration for local + Vercel frontend
 const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
@@ -16,14 +17,14 @@ const allowedOrigins = [
   "https://dispensary-frontend27.vercel.app",
 ];
 
-// ✅ Allow Vercel preview URLs like https://dispensary-frontend27-git-main-xxxxx.vercel.app
+// ✅ Allow all vercel preview URLs too (important)
 app.use(
   cors({
     origin: function (origin, callback) {
       if (
-        !origin || // allow server-to-server or mobile requests
+        !origin || // allow server-to-server or Postman
         allowedOrigins.includes(origin) ||
-        /\.vercel\.app$/.test(origin) // allow all vercel preview and prod URLs
+        /\.vercel\.app$/.test(origin) // ✅ allow vercel preview URLs
       ) {
         callback(null, true);
       } else {
@@ -56,15 +57,21 @@ app.use("/api/notification", notificationRoutes);
 app.use("/api/gallary", gallaryRoutes);
 app.use("/api/history", historyRoutes);
 
-// ✅ Health check for Vercel
+// ✅ Health check (for Vercel)
 app.get("/", (req, res) => {
   res.send("🚀 Backend is running successfully!");
 });
 
-// ✅ Export for Vercel
+// ✅ Global Error Handler (for debugging 500s)
+app.use((err, req, res, next) => {
+  console.error("🔥 Server Error:", err.message);
+  res.status(500).json({ error: err.message });
+});
+
+// ✅ Export for Vercel serverless
 module.exports = app;
 
-// ✅ Local run (only runs when not serverless)
+// ✅ Local run (only for development)
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
