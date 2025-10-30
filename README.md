@@ -5,7 +5,8 @@ A full-stack MERN application to manage dispensary operations — including pati
 ---
 
 ## 🔗 Live Project
-- **DEPLOYED(Vercel):** [https://dispensary-frontend.vercel.app/]([https://dispensary-frontend.vercel.app/](https://dispensary-frontend27.vercel.app/)
+- **DEPLOYED(Vercel):** **Deployed:** [https://dispensary-frontend27.vercel.app/](https://dispensary-frontend27.vercel.app/)
+
 
 ---
 
